@@ -3,7 +3,7 @@
 El proyecto fue desarrollado por:
 
 - **Juan Camilo López** (Líder de Negocio y Datos)
-- **Johan Alexis Bautista** (Líder de Proyecto y Analítica)
+- **Johan Alexis Bautista** (Líder de Proyecto)
 - **Danny Camilo Muñoz** (Líder de Analítica)
 
 ## Descripción General
