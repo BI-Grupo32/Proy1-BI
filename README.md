@@ -40,6 +40,6 @@ Después de evaluar los tres algoritmos, se seleccionó **SVM** como el modelo m
 
 ### Video de Resultados
 
-El video de 5 minutos que explica el proyecto y los resultados se puede encontrar [aquí](https://uniandes.padlet.org/mavillam/exposici-n-proyecto-anal-tica-de-texto-de-bi-202420).
+El video de 5 minutos que explica el proyecto y los resultados se puede encontrar [aquí](https://www.canva.com/design/DAGQG3VW0yk/RBNcNWiI29-RsEvCT5crfQ/edit?utm_content=DAGQG3VW0yk&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton). (También está subido en este repositorio)
 
 ---
