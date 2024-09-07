@@ -6,6 +6,12 @@ El proyecto fue desarrollado por:
 - **Johan Alexis Bautista** (Líder de Proyecto)
 - **Danny Camilo Muñoz** (Líder de Analítica)
 
+### Video de Resultados
+
+El video de 5 minutos que explica el proyecto y los resultados se puede encontrar [aquí](https://www.canva.com/design/DAGQG3VW0yk/RBNcNWiI29-RsEvCT5crfQ/edit?utm_content=DAGQG3VW0yk&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton). (También está subido en este repositorio)
+
+---
+
 ## Descripción General
 
 Este proyecto fue desarrollado para el curso **ISIS-3301 - Inteligencia de Negocios** en el semestre **2024-20**. El objetivo del proyecto es aplicar la metodología de **analítica de textos** para construir modelos que clasifiquen automáticamente las opiniones de los ciudadanos en relación con los **Objetivos de Desarrollo Sostenible (ODS)**, específicamente los ODS 3 (Salud y Bienestar), 4 (Educación de Calidad), y 5 (Igualdad de Género).
@@ -38,8 +44,4 @@ Después de evaluar los tres algoritmos, se seleccionó **SVM** como el modelo m
 - **ODS 4 (Educación de Calidad)**: educación, estudiantes, escuelas, docentes.
 - **ODS 5 (Igualdad de Género)**: mujeres, igualdad, derechos, violencia.
 
-### Video de Resultados
 
-El video de 5 minutos que explica el proyecto y los resultados se puede encontrar [aquí](https://www.canva.com/design/DAGQG3VW0yk/RBNcNWiI29-RsEvCT5crfQ/edit?utm_content=DAGQG3VW0yk&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton). (También está subido en este repositorio)
-
----
