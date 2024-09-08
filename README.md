@@ -8,7 +8,7 @@ El proyecto fue desarrollado por:
 
 ### Video de Resultados
 
-El video de 5 minutos que explica el proyecto y los resultados se puede encontrar [aquí](https://www.canva.com/design/DAGQG3VW0yk/RBNcNWiI29-RsEvCT5crfQ/edit?utm_content=DAGQG3VW0yk&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton). (También está subido en este repositorio)
+El video de 5 minutos que explica el proyecto y los resultados se puede encontrar [aquí](https://www.canva.com/design/DAGQG3VW0yk/kJGaEqqmeRSRx3p4aKNLzA/view?utm_content=DAGQG3VW0yk&utm_campaign=designshare&utm_medium=link&utm_source=editor). (También está subido en este repositorio)
 
 ---
 
