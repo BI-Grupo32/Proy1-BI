@@ -11,12 +11,19 @@ import unicodedata
 import re
 import string
 import spacy
-nlp = spacy.load('es_core_news_sm')
 
 app = FastAPI()
+nlp = spacy.load('es_core_news_sm')
 
-model = "1"#joblib.load('svc_model.pkl')  
-tfidf_vectorizer = "1"#joblib.load('tfidf_vectorizer.pkl')
+model = joblib.load('models/svc_model.pkl')  
+tfidf_vectorizer = joblib.load('models/tfidf_vectorizer.pkl')
+
+class TextosEntrada(BaseModel):
+    textos: List[str]
+
+class ReentrenamientoEntrada(BaseModel):
+    textos: List[str]
+    etiquetas: List[int]
 
 def remove_non_ascii(words):
     """Remove non-ASCII characters from list of tokenized words"""
@@ -55,30 +62,17 @@ def preprocessing(texto):
 
 def procesar_nuevos_textos(df):
     """Función para procesar y preparar textos en un DataFrame"""
-    # Corregir contracciones
+  
     df["Textos_espanol"] = df["Textos_espanol"].apply(contractions.fix)
-    
-    # Tokenización y preprocesamiento
+
     df["palabras"] = df["Textos_espanol"].apply(word_tokenize)
     df["palabras_preprocesadas"] = df["palabras"].apply(preprocessing)
     
-    # Convertir lista de palabras nuevamente a texto plano
     df["Textos_espanol"] = df["palabras_preprocesadas"].apply(lambda x: " ".join(map(str, x)))
     
-    # Eliminamos columnas auxiliares
     df = df.drop(columns=["palabras", "palabras_preprocesadas"], axis=1)
     
     return df
-
-def preprocessing(texto):
-    return texto.lower()  
-
-class TextosEntrada(BaseModel):
-    textos: List[str]
-
-class ReentrenamientoEntrada(BaseModel):
-    textos: List[str]
-    etiquetas: List[int]
 
 @app.post("/predict/")
 async def predict(data: TextosEntrada):
@@ -86,13 +80,21 @@ async def predict(data: TextosEntrada):
     
     textos_preprocesados = [preprocessing(texto) for texto in textos]
     
+    textos_preprocesados = [" ".join(palabras) for palabras in textos_preprocesados]
+    
+    print(textos_preprocesados)
+    
     textos_tfidf = tfidf_vectorizer.transform(textos_preprocesados)
+    
+    print(textos_tfidf)
     
     predicciones = model.predict(textos_tfidf.toarray())
     
     return {"predicciones": predicciones.tolist()}
 
+
 @app.post("/retrain/")
+#TODO: NO PROBADO, PREGUNTAR SI DEBERIA HACER RE-ENTRENO TOTAL
 async def retrain(data: ReentrenamientoEntrada):
     textos = data.textos
     
