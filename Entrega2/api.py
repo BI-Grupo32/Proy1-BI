@@ -3,11 +3,72 @@ import pandas as pd
 from fastapi import FastAPI
 from pydantic import BaseModel
 from typing import List
+import contractions
+from nltk import word_tokenize
+from nltk.corpus import stopwords
+from nltk.stem import WordNetLemmatizer
+import unicodedata
+import re
+import string
+import spacy
+nlp = spacy.load('es_core_news_sm')
 
 app = FastAPI()
 
 model = "1"#joblib.load('svc_model.pkl')  
 tfidf_vectorizer = "1"#joblib.load('tfidf_vectorizer.pkl')
+
+def remove_non_ascii(words):
+    """Remove non-ASCII characters from list of tokenized words"""
+    new_words = []
+    for word in words:
+        new_word = unicodedata.normalize('NFKD', word).encode('ascii', 'ignore').decode('utf-8', 'ignore')
+        new_words.append(new_word)
+    return new_words
+
+def to_lowercase(words):
+    """Convert all characters to lowercase from list of tokenized words"""
+    return [word.lower() for word in words]
+
+def remove_punctuation(words):
+    """Remove punctuation from list of tokenized words"""
+    return [re.sub(r'[^\w\s]', '', word) for word in words if word]
+
+def remove_stopwords(words):
+    """Remove stop words from list of tokenized words"""
+    return [word for word in words if word not in stopwords.words('spanish')]
+
+def lemmatize_verbs(words):
+    """Lemmatize verbs in list of tokenized words"""
+    lemmatizer = WordNetLemmatizer()
+    return [lemmatizer.lemmatize(word, pos='v') for word in words]
+
+def preprocessing(texto):
+    """Combinar todas las funciones de limpieza y normalización en una sola"""
+    words = word_tokenize(texto)
+    words = to_lowercase(words)
+    words = remove_non_ascii(words)
+    words = remove_punctuation(words)
+    words = remove_stopwords(words)
+    words = lemmatize_verbs(words)
+    return words
+
+def procesar_nuevos_textos(df):
+    """Función para procesar y preparar textos en un DataFrame"""
+    # Corregir contracciones
+    df["Textos_espanol"] = df["Textos_espanol"].apply(contractions.fix)
+    
+    # Tokenización y preprocesamiento
+    df["palabras"] = df["Textos_espanol"].apply(word_tokenize)
+    df["palabras_preprocesadas"] = df["palabras"].apply(preprocessing)
+    
+    # Convertir lista de palabras nuevamente a texto plano
+    df["Textos_espanol"] = df["palabras_preprocesadas"].apply(lambda x: " ".join(map(str, x)))
+    
+    # Eliminamos columnas auxiliares
+    df = df.drop(columns=["palabras", "palabras_preprocesadas"], axis=1)
+    
+    return df
 
 def preprocessing(texto):
     return texto.lower()  

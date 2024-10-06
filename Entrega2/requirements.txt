@@ -1,0 +1,6 @@
+contractions
+inflect
+nltk
+spacy
+scikit-learn
+pandas
