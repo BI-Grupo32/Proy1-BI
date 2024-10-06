@@ -34,6 +34,7 @@ async def predict(data: TextosEntrada):
 @app.post("/retrain/")
 async def retrain(data: ReentrenamientoEntrada):
     textos = data.textos
+    
     etiquetas = data.etiquetas
     
     textos_preprocesados = [preprocessing(texto) for texto in textos]
