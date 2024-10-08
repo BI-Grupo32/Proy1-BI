@@ -1,6 +1,6 @@
 import joblib
 import pandas as pd
-from fastapi import FastAPI
+from fastapi import FastAPI, File, UploadFile
 from pydantic import BaseModel
 from typing import List
 import contractions
@@ -11,6 +11,7 @@ import unicodedata
 import re
 import string
 import spacy
+import json
 
 app = FastAPI()
 nlp = spacy.load('es_core_news_sm')
@@ -60,8 +61,8 @@ def preprocessing(texto):
     words = lemmatize_verbs(words)
     return words
 
-
-@app.post("/predict/")
+#Entrada no file
+"""@app.post("/predict/")
 async def predict(data: TextosEntrada):
     textos = data.textos
     
@@ -75,6 +76,26 @@ async def predict(data: TextosEntrada):
     
     predicciones = model.predict(textos_tfidf.toarray())
     
+    return {"predicciones": predicciones.tolist()}"""
+
+@app.post("/predict/")
+async def predict_from_json(file: UploadFile = File(...)):
+   
+    contents = await file.read()
+    data = json.loads(contents)
+    textos = data.get("textos", [])
+
+    if not textos:
+        return {"error": "No se encontraron textos en el archivo JSON"}
+
+    textos_preprocesados = [" ".join(preprocessing(texto)) for texto in textos]
+    
+    print(textos_preprocesados)
+
+    textos_tfidf = tfidf_vectorizer.transform(textos_preprocesados)
+
+    predicciones = model.predict(textos_tfidf.toarray())
+
     return {"predicciones": predicciones.tolist()}
 
 

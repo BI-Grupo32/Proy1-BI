@@ -4,3 +4,5 @@ nltk
 spacy
 scikit-learn
 pandas
+python-multipart
+
