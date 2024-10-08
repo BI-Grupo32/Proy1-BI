@@ -20,3 +20,21 @@
   "etiquetas": [3, 4]  # Etiquetas que corresponden a los textos
 }
 ```
+
+Para correr la api:
+
+```
+pip install -r requirements.txt
+```
+
+```
+export PATH=$PATH:~/.local/bin
+```
+
+```
+python download_resources.py
+```
+
+```
+uvicorn api:app --reload
+```
