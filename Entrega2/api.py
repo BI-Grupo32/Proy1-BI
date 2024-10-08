@@ -19,6 +19,8 @@ nlp = spacy.load('es_core_news_sm')
 model = joblib.load('models/svc_model.pkl')  
 tfidf_vectorizer = joblib.load('models/tfidf_vectorizer.pkl')
 
+SCORE_MODELO = 0.983
+
 class TextosEntrada(BaseModel):
     textos: List[str]
 
@@ -61,6 +63,12 @@ def preprocessing(texto):
     words = lemmatize_verbs(words)
     return words
 
+def pipeline(textos):
+    textos_preprocesados = [" ".join(preprocessing(texto)) for texto in textos]
+    print(textos_preprocesados)
+    textos_tfidf = tfidf_vectorizer.transform(textos_preprocesados)
+    return textos_tfidf
+
 #Entrada no file
 """@app.post("/predict/")
 async def predict(data: TextosEntrada):
@@ -84,20 +92,16 @@ async def predict_from_json(file: UploadFile = File(...)):
     contents = await file.read()
     data = json.loads(contents)
     textos = data.get("textos", [])
-
+    
     if not textos:
         return {"error": "No se encontraron textos en el archivo JSON"}
-
-    textos_preprocesados = [" ".join(preprocessing(texto)) for texto in textos]
-    
-    print(textos_preprocesados)
-
-    textos_tfidf = tfidf_vectorizer.transform(textos_preprocesados)
-
+    textos_tfidf = pipeline(textos)
     predicciones = model.predict(textos_tfidf.toarray())
 
-    return {"predicciones": predicciones.tolist()}
-
+    return {
+            "predicciones": predicciones.tolist(),
+            "score": SCORE_MODELO
+        }
 
 @app.post("/retrain/")
 #TODO: NO PROBADO, PREGUNTAR SI DEBERIA HACER RE-ENTRENO TOTAL
