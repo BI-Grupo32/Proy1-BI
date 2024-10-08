@@ -60,27 +60,12 @@ def preprocessing(texto):
     words = lemmatize_verbs(words)
     return words
 
-def procesar_nuevos_textos(df):
-    """Función para procesar y preparar textos en un DataFrame"""
-  
-    df["Textos_espanol"] = df["Textos_espanol"].apply(contractions.fix)
-
-    df["palabras"] = df["Textos_espanol"].apply(word_tokenize)
-    df["palabras_preprocesadas"] = df["palabras"].apply(preprocessing)
-    
-    df["Textos_espanol"] = df["palabras_preprocesadas"].apply(lambda x: " ".join(map(str, x)))
-    
-    df = df.drop(columns=["palabras", "palabras_preprocesadas"], axis=1)
-    
-    return df
 
 @app.post("/predict/")
 async def predict(data: TextosEntrada):
     textos = data.textos
     
-    textos_preprocesados = [preprocessing(texto) for texto in textos]
-    
-    textos_preprocesados = [" ".join(palabras) for palabras in textos_preprocesados]
+    textos_preprocesados = [" ".join(preprocessing(texto)) for texto in textos]
     
     print(textos_preprocesados)
     
@@ -100,13 +85,13 @@ async def retrain(data: ReentrenamientoEntrada):
     
     etiquetas = data.etiquetas
     
-    textos_preprocesados = [preprocessing(texto) for texto in textos]
+    textos_preprocesados = [" ".join(preprocessing(texto)) for texto in textos]
     
     textos_tfidf = tfidf_vectorizer.transform(textos_preprocesados)
     
     model.fit(textos_tfidf, etiquetas)
     
-    joblib.dump(model, 'svc_model.pkl')
+    joblib.dump(model, 'models/svc_model.pkl')
     
     return {"status": "Modelo reentrenado exitosamente"}
 
