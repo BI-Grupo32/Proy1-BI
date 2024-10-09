@@ -5,4 +5,4 @@ spacy
 scikit-learn
 pandas
 python-multipart
-dill
+fastapi-cors

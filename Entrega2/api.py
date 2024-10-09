@@ -1,5 +1,6 @@
 import joblib
 import pandas as pd
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI, File, UploadFile
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, classification_report
@@ -9,6 +10,13 @@ from collections import Counter
 import os
 
 app = FastAPI()
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],  
+    allow_credentials=True,
+    allow_methods=["*"],  
+    allow_headers=["*"],  
+)
 pipeline = joblib.load('text_classification_pipeline.pkl')
 @app.post("/predict/")
 async def predict_from_xlsx(file: UploadFile = File(...)):
