@@ -3,7 +3,7 @@ import pandas as pd
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI, File, UploadFile
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score, classification_report
+from sklearn.metrics import accuracy_score, classification_report, f1_score, recall_score
 from text_preprocessor import TextPreprocessor
 from fastapi.responses import FileResponse
 from collections import Counter
@@ -87,6 +87,8 @@ async def retrain_model(file: UploadFile = File(...)):
     y_pred = pipeline.predict(X_test)
 
     accuracy = accuracy_score(y_test, y_pred)
+    f1 = f1_score(y_test, y_pred, average='weighted') 
+    recall = recall_score(y_test, y_pred, average='weighted') 
     classification_rep = classification_report(y_test, y_pred)
 
     joblib.dump(pipeline, 'text_classification_pipeline.pkl')
@@ -94,8 +96,11 @@ async def retrain_model(file: UploadFile = File(...)):
     return {
         "status": "Modelo reentrenado exitosamente",
         "accuracy": accuracy,
+        "f1_score": f1,
+        "recall": recall,
         "classification_report": classification_rep
     }
+
 
 if __name__ == "__main__":
     import uvicorn
