@@ -6,3 +6,4 @@ scikit-learn
 pandas
 python-multipart
 fastapi-cors
+openpyxl
