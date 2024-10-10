@@ -89,7 +89,7 @@ async def retrain_model(file: UploadFile = File(...)):
     accuracy = accuracy_score(y_test, y_pred)
     f1 = f1_score(y_test, y_pred, average='weighted') 
     recall = recall_score(y_test, y_pred, average='weighted') 
-    classification_rep = classification_report(y_test, y_pred)
+    classification_rep = classification_report(y_test, y_pred, output_dict=True)
 
     joblib.dump(pipeline, 'text_classification_pipeline.pkl')
 

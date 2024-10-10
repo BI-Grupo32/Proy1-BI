@@ -7,7 +7,7 @@ from sklearn.metrics import accuracy_score, classification_report
 from text_preprocessor import TextPreprocessor
 import joblib
 
-df = pd.read_excel('data/ODScat_345.xlsx')  
+df = pd.read_excel('data_base/ODScat_345_base.xlsx')  
 df["Textos_espanol"] = df["Textos_espanol"].astype("string")
 
 pipeline = Pipeline([
