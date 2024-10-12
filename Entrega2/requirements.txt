@@ -1,0 +1,9 @@
+contractions
+inflect
+nltk
+spacy
+scikit-learn
+pandas
+python-multipart
+fastapi-cors
+openpyxl
