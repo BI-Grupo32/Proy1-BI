@@ -20,6 +20,19 @@ app.add_middleware(
 pipeline = joblib.load('text_classification_pipeline.pkl')
 @app.post("/predict/")
 async def predict_from_xlsx(file: UploadFile = File(...)):
+    """
+    Recibe un archivo Excel que contiene una columna llamada 'Textos_espanol' con textos en español.
+    Hace predicciones sobre cada texto utilizando un pipeline de clasificación.
+    Devuelve un archivo Excel con las predicciones y un resumen de las predicciones realizadas.
+    
+    - Parámetro:
+        - file: Archivo Excel (.xlsx) subido por el usuario con la columna 'Textos_espanol'.
+    
+    - Retorna:
+        - Un archivo Excel con las predicciones agregadas.
+        - Un conteo de las clases predichas y las probabilidades correspondientes.
+    """
+    
     contents = await file.read()
     df = pd.read_excel(contents)
     if 'Textos_espanol' not in df.columns:
@@ -32,6 +45,7 @@ async def predict_from_xlsx(file: UploadFile = File(...)):
     probabilidades = probabilidades.tolist()
 
     df['sdg'] = predicciones
+    df['probabilidades'] = probabilidades
 
     output_filename = "predicciones.xlsx"
     df.to_excel(output_filename, index=False)
@@ -51,6 +65,15 @@ async def predict_from_xlsx(file: UploadFile = File(...)):
 
 @app.get("/download-predictions/")
 async def download_predictions():
+    """
+    Descarga el archivo Excel generado previamente que contiene las predicciones de los textos.
+    
+    - Parámetro: Ninguno.
+    
+    - Retorna:
+        - El archivo Excel con las predicciones si existe.
+        - Un mensaje de error si no se encuentra el archivo.
+    """
     output_filename = "predicciones.xlsx"
     if os.path.exists(output_filename):
         return FileResponse(output_filename, media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", filename=output_filename)
@@ -58,6 +81,18 @@ async def download_predictions():
 
 @app.post("/retrain/")
 async def retrain_model(file: UploadFile = File(...)):
+    """
+    Recibe un archivo Excel que contiene las columnas 'Textos_espanol' y 'sdg' correspondiente a textos en español y etiquetas.
+    Reentrena el modelo combinando los datos nuevos con los existentes.
+    Devuelve las métricas de rendimiento del modelo reentrenado.
+    
+    - Parámetro:
+        - file: Archivo Excel (.xlsx) subido por el usuario con las columnas 'Textos_espanol' (textos) y 'sdg' (etiquetas).
+    
+    - Retorna:
+        - Un mensaje de confirmación de reentrenamiento exitoso.
+        - Métricas de rendimiento del nuevo modelo: precisión, F1-score, recall y un reporte de clasificación.
+    """
     contents = await file.read()
     nuevos_datos = pd.read_excel(contents)
     
@@ -103,5 +138,13 @@ async def retrain_model(file: UploadFile = File(...)):
 
 
 if __name__ == "__main__":
+    """
+    Ejecuta la aplicación FastAPI localmente utilizando Uvicorn.
+    
+    - Parámetro: Ninguno.
+    
+    - Retorna:
+        - No retorna nada. Inicia el servidor local en el puerto 8000.
+    """
     import uvicorn
     uvicorn.run("api:app", host="127.0.0.1", port=8000, log_level="info", reload=True)
